@@ -83,11 +83,10 @@ require('compe').setup {
   },
 }
 
--- Map /o to open nvim-compe menu
---vim.api.nvim_set_keymap('n', '/o', ":lua require'compe'.complete({ 'kind': '', 'preselect': 'always' })<CR>", { noremap = true, silent = true })
 
 
 
+---------------------------------------------------------------------------------
 
 -- Install Packer if not installed
 local install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
