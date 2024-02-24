@@ -2,29 +2,44 @@ vim.cmd[[set number]]
 --vim.cmd('colorscheme desert')
 vim.cmd.colorscheme "catppuccin"
 vim.cmd('let $PATH .= ":" . expand("~/.fzf/bin")')
--- For Lua (init.lua)
+
+-- Keybindings for fzf in Lua
+vim.api.nvim_set_keymap('n', '<C-f>', ':FZF<CR>', { noremap = true, silent = true })
+
+
+local mark = require("harpoon.mark")
+local ui = require("harpoon.ui")
+vim.keymap.set("n", "<C-m>", mark.add_file)
+vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
+vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end)
+vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
+vim.keymap.set("n", "<C-s", function() ui.nav_file(4) end)
+
+-- For Lua (init.lua)--------------------------
+-- In your init.lua
+
+-- In your init.lua
 vim.g.startify_custom_header = {
-    '    ████▌█████▌█ ████████▐▀██▀    ',
-    '  ▄█████ █████▌ █ ▀██████▌█▄▄▀▄   ',
-    '  ▌███▌█ ▐███▌▌  ▄▄ ▌█▌███▐███ ▀  ',
-    ' ▐ ▐██  ▄▄▐▀█   ▐▄█▀▌█▐███▐█      ',
-    '   ███ ▌▄█▌  ▀  ▀██  ▀██████▌     ',
-    '    ▀█▌▀██▀ ▄         ███▐███     ',
-    '     ██▌             ▐███████▌    ',
-    '     ███     ▀█▀     ▐██▐███▀▌    ',
-    '     ▌█▌█▄         ▄▄████▀ ▀      ',
-    '       █▀██▄▄▄ ▄▄▀▀▒█▀█           ',
-    '',
-    ' ███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗',
-    ' ████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║',
-    ' ██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║',
-    ' ██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║',
-    ' ██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║',
-    ' ╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝',
+     '    ████▌█████▌█ ████████▐▀██▀    ',
+     '  ▄█████ █████▌ █ ▀██████▌█▄▄▀▄   ',
+     '  ▌███▌█ ▐███▌▌  ▄▄ ▌█▌███▐███ ▀  ',
+     ' ▐ ▐██  ▄▄▐▀█   ▐▄█▀▌█▐███▐█      ',
+     '   ███ ▌▄█▌  ▀  ▀██  ▀██████▌     ',
+     '    ▀█▌▀██▀ ▄         ███▐███     ',
+     '     ██▌             ▐███████▌    ',
+     '     ███     ▀█▀     ▐██▐███▀▌    ',
+     '     ▌█▌█▄         ▄▄████▀ ▀      ',
+     '       █▀██▄▄▄ ▄▄▀▀▒█▀█           ',
+     '',
+     ' ███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗',
+     ' ████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║',
+     ' ██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║',
+     ' ██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║',
+     ' ██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║',
+     ' ╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝',
 }
-vim.g.startify_custom_footer = {
-    'Welcome to Neovim!',
-}
+vim.g.startify_centered_header = 1
 
 require('lualine').setup {
   options = {
@@ -67,6 +82,9 @@ require('lualine').setup {
   extensions = {}
 }
 
+-- Install fzf.vim if you haven't already
+-- Plug 'junegunn/fzf.vim'
+
 -- Map <Space> + o to open nvim-compe menu
 require('compe').setup {
   enabled = true,
@@ -83,10 +101,11 @@ require('compe').setup {
   },
 }
 
+-- Map /o to open nvim-compe menu
+--vim.api.nvim_set_keymap('n', '/o', ":lua require'compe'.complete({ 'kind': '', 'preselect': 'always' })<CR>", { noremap = true, silent = true })
 
 
 
----------------------------------------------------------------------------------
 
 -- Install Packer if not installed
 local install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
@@ -102,8 +121,7 @@ packer.startup(function()
 
     -- Add the catppuccino/nvim theme
     use { "catppuccin/nvim", as = "catppuccin" }
-    use 'nvim-lua/plenary.nvim'
-    use 'nvim-lua/popup.nvim'
+
     -- Add fzf and fzf.vim
     use { 'junegunn/fzf', run = './install --all' }
     use {
@@ -139,6 +157,8 @@ packer.startup(function()
     end
   }
     use 'junegunn/fzf.vim'
+    use 'nvim-lua/plenary.nvim'
+    use 'ThePrimeagen/harpoon'
     use 'mhinz/vim-startify'
     use {
 	'neovim/nvim-lspconfig',
@@ -148,4 +168,5 @@ packer.startup(function()
     }
 
 end)
+
 
